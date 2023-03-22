@@ -1,2 +1,2 @@
-# locomotif-products
-Products module for locomotif CMS
+# locomotif-sliders
+Sliders module for locomotif CMS
