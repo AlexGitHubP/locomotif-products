@@ -18,12 +18,23 @@ class ProductsAttributesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
         $productsAttributes = ProductsAttributes::all();
-        
+        foreach ($productsAttributes as $key => $value) {
+            $productsAttributes[$key]->status_nice = mapStatus($value->attr_status);
+            $productsAttributes[$key]->total_attr  = app(ProductsAttributesValuesController::class)->countAttr($value->id);
+        }
         return view('attributes::list')->with('productsAttributes', $productsAttributes);
     }
+
+    public function getAllAttributes($product_id){
+        $productsAttributes = ProductsAttributes::all();
+        
+        return view('attributes::addSubtemplate')->with('productsAttributes', $productsAttributes)->with('product_id', $product_id)->with('product_id', $product_id);
+    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -80,7 +91,11 @@ class ProductsAttributesController extends Controller
      */
     public function edit(ProductsAttributes $productsAttribute)
     {
-        return view('attributes::edit')->with('productsAttributes', $productsAttribute);
+        
+        $listAttrValueSubtemplate = app(ProductsAttributesValuesController::class)->index($productsAttribute->id);
+        $addAttrValuesubtemplate  = app(ProductsAttributesValuesController::class)->create($productsAttribute->id);
+        
+        return view('attributes::edit')->with('productsAttribute', $productsAttribute)->with('addAttrValuesubtemplate', $addAttrValuesubtemplate)->with('listAttrValueSubtemplate', $listAttrValueSubtemplate);
     }
 
     /**

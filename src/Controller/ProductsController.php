@@ -5,6 +5,7 @@ namespace Locomotif\Products\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Locomotif\Products\Models\Products;
+use Locomotif\Media\Controller\MediaController;
 
 class ProductsController extends Controller
 {
@@ -19,8 +20,10 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Products::all();
-        
+        $products = Products::with('categories')->with('subcategories')->get();
+        foreach ($products as $key => $value) {
+            $products[$key]->product_status_nice = mapStatus($value->product_status);
+        }
         return view('products::list')->with('products', $products);
     }
 
@@ -42,10 +45,6 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function setOrder($product_id){
-
-    }
-
     public function store(Request $request)
     {
 
@@ -65,11 +64,9 @@ class ProductsController extends Controller
         $product->price             = $request->price;
         $product->price_estimate    = $request->price_estimate;
         $product->description       = $request->description;
-        $product->technical_specs   = $request->technical_specs;
-        $product->technical_file    = $request->technical_file;
-        $product->product_area      = $request->product_area;
-        $product->rand_3d           = $request->rand_3d;
-        $product->favourite_product = $request->favourite_product;
+        $product->ordering          = getOrdering('products', 'ordering');
+        $product->rand_3d           = $request->has('rand_3d');
+        $product->favourite_product = $request->has('favourite_product');
         $product->product_status    = $request->product_status;
         
         $product->save();
@@ -97,7 +94,15 @@ class ProductsController extends Controller
      */
     public function edit(Products $product)
     {
-        return view('products::edit')->with('product', $product);
+        $associatedCategories = app(ProductsCategoriesController::class)->getCategAndSubcateg($product->id);
+        $associatedAttributes = app(ProductsMetaController::class)->index($product->id);
+        $buildAttributes      = app(ProductsAttributesController::class)->getAllAttributes($product->id);
+        $buildAttributes      = app(ProductsAttributesController::class)->getAllAttributes($product->id);
+        $associatedAreas      = app(ProductsAreaController::class)->getAreas($product->id);
+        $associatedMedia      = app(MediaController::class)->mediaAssociations($product->getTable(), $product->id);
+        
+
+        return view('products::edit')->with('product', $product)->with('associatedAttributes', $associatedAttributes)->with('buildAttributes', $buildAttributes)->with('associatedCategories', $associatedCategories)->with('associatedMedia', $associatedMedia)->with('associatedAreas', $associatedAreas);  
     }
 
     /**
@@ -118,12 +123,10 @@ class ProductsController extends Controller
         $product->price             = $request->price;
         $product->price_estimate    = $request->price_estimate;
         $product->description       = $request->description;
-        $product->technical_specs   = $request->technical_specs;
-        $product->technical_file    = $request->technical_file;
-        $product->product_area      = $request->product_area;
-        $product->rand_3d           = $request->rand_3d;
-        $product->favourite_product = $request->favourite_product;
+        $product->rand_3d           = $request->has('rand_3d');
+        $product->favourite_product = $request->has('favourite_product');
         $product->product_status    = $request->product_status;
+        // echo '<pre>';print_r($product);exit;
         $product->save();
 
         return redirect('admin/products/'.$product->id.'/edit');
