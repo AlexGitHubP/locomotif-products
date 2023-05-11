@@ -97,7 +97,6 @@ class ProductsController extends Controller
         $associatedCategories = app(ProductsCategoriesController::class)->getCategAndSubcateg($product->id);
         $associatedAttributes = app(ProductsMetaController::class)->index($product->id);
         $buildAttributes      = app(ProductsAttributesController::class)->getAllAttributes($product->id);
-        $buildAttributes      = app(ProductsAttributesController::class)->getAllAttributes($product->id);
         $associatedAreas      = app(ProductsAreaController::class)->getAreas($product->id);
         $associatedMedia      = app(MediaController::class)->mediaAssociations($product->getTable(), $product->id);
         
@@ -126,7 +125,7 @@ class ProductsController extends Controller
         $product->rand_3d           = $request->has('rand_3d');
         $product->favourite_product = $request->has('favourite_product');
         $product->product_status    = $request->product_status;
-        // echo '<pre>';print_r($product);exit;
+        
         $product->save();
 
         return redirect('admin/products/'.$product->id.'/edit');
