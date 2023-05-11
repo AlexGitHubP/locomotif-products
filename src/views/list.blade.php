@@ -104,15 +104,7 @@
 					<ul>
 						@foreach ($product->categories as $category)
 						<li>
-							<a href='/admin/productsCategories/{{$category->id}}/edit'>{{$category->category_name}}</a>:
-							@if (count($product->subcategories) > 0)
-								@foreach ($product->subcategories as $subcategory)
-									<span><a href='/admin/productsSubcategories/{{$subcategory->id}}/edit'>{{$subcategory->subcategory_name}}</a>{{ $loop->last ? '' : ',' }} </span>
-								@endforeach	
-							@else
-								<span>Fără subcategorie asociată</span>
-							@endif
-							
+							<a href='/admin/productsCategories/{{$category->id}}/edit'>{{$category->category_name}}</a>{{ $loop->last ? '' : ',' }}							
 						</li>
 						@endforeach
 					</ul>
