@@ -11,7 +11,7 @@ class ProductsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('authgate');
+        $this->middleware(['authgate:administrator']);
     }
     /**
      * Display a listing of the resource.
