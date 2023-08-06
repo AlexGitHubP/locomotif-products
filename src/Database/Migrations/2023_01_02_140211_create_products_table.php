@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->text('description',      255);
             $table->string('rand_3d',        255)->nullable();
             $table->integer('ordering'          )->length(10)->unsigned()->nullable();
+            $table->integer('ordering_designer' )->length(10)->unsigned()->nullable();
             $table->string('favourite_product', 255)->nullable();
             $table->enum('product_status', array('pending', 'hidden', 'published'));
             $table->dateTime('created_at');

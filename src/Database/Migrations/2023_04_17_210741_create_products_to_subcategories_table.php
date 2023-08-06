@@ -16,6 +16,7 @@ class CreateProductsToSubcategoriesTable extends Migration
         Schema::create('products_to_subcategories', function (Blueprint $table) {
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('subcategory_id');
+            $table->tinyInteger('main');
             $table->dateTime          ('created_at');
             $table->dateTime          ('updated_at');
 
