@@ -11,6 +11,6 @@ class ProductsSubcategories extends Model
     }
     
     public function products(){
-        return $this->belongsToMany('Locomotif\Products\Models\Products', 'products_to_subcategories');
+        return $this->belongsToMany('Locomotif\Products\Models\Products', 'products_to_subcategories', 'subcategory_id', 'product_id');
     }
 }
